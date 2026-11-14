@@ -43,6 +43,9 @@ interface SetDao {
     )
     fun observeHistory(): Flow<List<WorkoutDaySummary>>
 
+    @Query("SELECT * FROM set_log WHERE done = 1 ORDER BY date DESC, exerciseId, setIndex")
+    fun observeAllDone(): Flow<List<SetLog>>
+
     @Upsert
     suspend fun upsert(set: SetLog): Long
 
@@ -55,8 +58,8 @@ interface FoodDao {
     @Query("SELECT * FROM food_log WHERE date = :date ORDER BY time")
     fun observeDate(date: Long): Flow<List<FoodLog>>
 
-    @Query("SELECT DISTINCT date FROM food_log ORDER BY date DESC")
-    fun observeDates(): Flow<List<Long>>
+    @Query("SELECT * FROM food_log ORDER BY date DESC, time")
+    fun observeAll(): Flow<List<FoodLog>>
 
     @Insert
     suspend fun insert(food: FoodLog): Long

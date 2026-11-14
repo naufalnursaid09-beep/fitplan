@@ -3,7 +3,18 @@ package com.fitplan.app.ui.home
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EventAvailable
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.fitplan.app.ui.theme.Amber
+import kotlin.math.roundToInt
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +40,19 @@ fun HomeScreen(onOpenSettings: () -> Unit, onStartWorkout: (Long, String) -> Uni
     ScreenColumn(title = "Hari Ini") {
         Text(today.indo(), style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+        // Kalori & protein hari ini
+        val foods by remember { FitPlanApp.instance.db.foods().observeDate(today.toEpochDay()) }
+            .collectAsStateWithLifecycle(emptyList())
+        val kcal = foods.sumOf { it.kcal }
+        val protein = foods.sumOf { it.protein.toDouble() }.toFloat()
+        SectionCard {
+            Text("Nutrisi hari ini", style = MaterialTheme.typography.titleLarge)
+            TargetBar("Kalori", kcal.toFloat(), settings.targetKcal.toFloat(), "kkal")
+            TargetBar("Protein", protein, settings.targetProtein.toFloat(), "g")
+            Text("Angka makanan dari foto adalah estimasi.", style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
 
         when (status) {
             Program.Status.NotSet -> {
@@ -97,4 +121,25 @@ fun HomeScreen(onOpenSettings: () -> Unit, onStartWorkout: (Long, String) -> Uni
             }
         }
     }
+}
+
+@Composable
+private fun TargetBar(label: String, value: Float, target: Float, unit: String) {
+    val over = value > target
+    Row(Modifier.fillMaxWidth()) {
+        Text(label, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+        Text("${value.roundToInt()} / ${target.roundToInt()} $unit",
+            style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
+    }
+    LinearProgressIndicator(
+        progress = { if (target <= 0f) 0f else (value / target).coerceIn(0f, 1f) },
+        color = if (over) Amber else MaterialTheme.colorScheme.primary,
+        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        modifier = Modifier.fillMaxWidth().height(14.dp).clip(RoundedCornerShape(7.dp)),
+    )
+    val left = target - value
+    Text(
+        if (left > 0) "Sisa ${left.roundToInt()} $unit" else "Target tercapai (lebih ${(-left).roundToInt()} $unit)",
+        style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
 }
