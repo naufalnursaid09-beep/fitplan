@@ -87,9 +87,9 @@ fun SettingsScreen() {
             }
         }
 
-        Text("Pengaturan pengingat dan API key akan muncul di sini pada tahap berikutnya.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant)
+        // ---- Pengingat ----
+        Text("Pengingat", style = MaterialTheme.typography.titleLarge)
+        ReminderSettings(prefs, settings)
     }
 
     if (showPicker) {

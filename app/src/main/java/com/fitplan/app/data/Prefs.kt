@@ -37,6 +37,9 @@ class Prefs(context: Context) {
 
     val current: Settings get() = _settings.value
 
+    /** Dipanggil setelah pengaturan disimpan. */
+    var onChange: ((Settings) -> Unit)? = null
+
     private fun load(): Settings {
         val d = Settings()
         val start = sp.getLong(K_START, Long.MIN_VALUE)
@@ -74,6 +77,7 @@ class Prefs(context: Context) {
             putFloat(K_GOAL_WEIGHT, s.goalWeight)
         }.apply()
         _settings.value = s
+        onChange?.invoke(s)
     }
 
     private companion object {

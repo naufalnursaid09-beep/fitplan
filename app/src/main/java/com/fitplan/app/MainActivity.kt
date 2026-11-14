@@ -1,6 +1,14 @@
 package com.fitplan.app
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -37,7 +45,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            FitPlanTheme { FitPlanRoot() }
+            FitPlanTheme {
+                AskNotificationPermissionOnce()
+                FitPlanRoot()
+            }
         }
     }
 }
@@ -89,6 +100,21 @@ private fun FitPlanRoot() {
                 composable(Tab.Progress.route) { ComingSoon("Progres", "tahap (e)") }
                 composable(Tab.Settings.route) { SettingsScreen() }
             }
+        }
+    }
+}
+
+/** Android 13+: minta izin notifikasi saat aplikasi pertama kali dibuka. */
+@Composable
+private fun AskNotificationPermissionOnce() {
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { }
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= 33 &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 }
