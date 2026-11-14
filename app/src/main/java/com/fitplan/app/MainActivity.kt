@@ -30,7 +30,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navArgument
+import com.fitplan.app.ui.workout.WorkoutScreen
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -93,12 +96,28 @@ private fun FitPlanRoot() {
         Box(Modifier.padding(padding)) {
             NavHost(navController = nav, startDestination = Tab.Home.route) {
                 composable(Tab.Home.route) {
-                    HomeScreen(onOpenSettings = { go(Tab.Settings.route) })
+                    HomeScreen(
+                        onOpenSettings = { go(Tab.Settings.route) },
+                        onStartWorkout = { date, key -> nav.navigate("workout/$date/$key") },
+                    )
                 }
                 composable(Tab.Schedule.route) { ScheduleScreen() }
                 composable(Tab.Food.route) { ComingSoon("Makanan", "tahap (d)") }
                 composable(Tab.Progress.route) { ComingSoon("Progres", "tahap (e)") }
                 composable(Tab.Settings.route) { SettingsScreen() }
+                composable(
+                    "workout/{date}/{key}",
+                    arguments = listOf(
+                        navArgument("date") { type = NavType.LongType },
+                        navArgument("key") { type = NavType.StringType },
+                    ),
+                ) { entry ->
+                    WorkoutScreen(
+                        date = entry.arguments?.getLong("date") ?: 0L,
+                        dayKey = entry.arguments?.getString("key") ?: "",
+                        onBack = { nav.popBackStack() },
+                    )
+                }
             }
         }
     }

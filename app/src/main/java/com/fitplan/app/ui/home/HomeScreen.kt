@@ -2,6 +2,7 @@ package com.fitplan.app.ui.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EventAvailable
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +20,7 @@ import com.fitplan.app.ui.common.SectionCard
 import java.time.LocalDate
 
 @Composable
-fun HomeScreen(onOpenSettings: () -> Unit) {
+fun HomeScreen(onOpenSettings: () -> Unit, onStartWorkout: (Long, String) -> Unit) {
     val settings by FitPlanApp.instance.prefs.settings.collectAsStateWithLifecycle()
     val today = remember { LocalDate.now() }
     val start = settings.startDate
@@ -62,11 +63,21 @@ fun HomeScreen(onOpenSettings: () -> Unit) {
                 Text("Latihan hari ini: ${workout.title}", style = MaterialTheme.typography.titleLarge)
                 ExerciseTable(workout)
             }
+            BigButton("Mulai latihan", onClick = { onStartWorkout(today.toEpochDay(), workout.key) },
+                icon = Icons.Filled.FitnessCenter)
         } else if (status is Program.Status.Running) {
             SectionCard {
                 Text("Hari libur 😴", style = MaterialTheme.typography.titleLarge)
                 Text("Istirahat, cukup tidur, dan tetap kejar target protein.",
                     style = MaterialTheme.typography.bodyLarge)
+            }
+            SectionCard {
+                Text("Kelewatan latihan? Kerjakan susulan hari ini:",
+                    style = MaterialTheme.typography.bodyLarge)
+                Program.weekly.values.forEach { w ->
+                    BigButton(w.title, outlined = true,
+                        onClick = { onStartWorkout(today.toEpochDay(), w.key) })
+                }
             }
         }
 
