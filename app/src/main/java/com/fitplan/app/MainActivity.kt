@@ -39,6 +39,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fitplan.app.ui.common.ScreenColumn
 import com.fitplan.app.ui.common.SectionCard
+import com.fitplan.app.ui.food.FoodScreen
 import com.fitplan.app.ui.home.HomeScreen
 import com.fitplan.app.ui.schedule.ScheduleScreen
 import com.fitplan.app.ui.settings.SettingsScreen
@@ -102,7 +103,7 @@ private fun FitPlanRoot() {
                     )
                 }
                 composable(Tab.Schedule.route) { ScheduleScreen() }
-                composable(Tab.Food.route) { ComingSoon("Makanan", "tahap (d)") }
+                composable(Tab.Food.route) { FoodScreen(onOpenSettings = { go(Tab.Settings.route) }) }
                 composable(Tab.Progress.route) { ComingSoon("Progres", "tahap (e)") }
                 composable(Tab.Settings.route) { SettingsScreen() }
                 composable(
