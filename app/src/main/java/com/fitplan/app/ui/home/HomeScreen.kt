@@ -50,7 +50,7 @@ fun HomeScreen(onOpenSettings: () -> Unit, onStartWorkout: (Long, String) -> Uni
             Text("Nutrisi hari ini", style = MaterialTheme.typography.titleLarge)
             TargetBar("Kalori", kcal.toFloat(), settings.targetKcal.toFloat(), "kkal")
             TargetBar("Protein", protein, settings.targetProtein.toFloat(), "g")
-            Text("Angka makanan dari foto adalah estimasi.", style = MaterialTheme.typography.bodyMedium,
+            Text("Catat makanan di menu Makanan.", style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
 

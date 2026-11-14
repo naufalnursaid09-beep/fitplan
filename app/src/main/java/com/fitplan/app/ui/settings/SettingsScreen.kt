@@ -87,9 +87,6 @@ fun SettingsScreen() {
             }
         }
 
-        // ---- API key ----
-        ApiKeySettings()
-
         // ---- Pengingat ----
         Text("Pengingat", style = MaterialTheme.typography.titleLarge)
         ReminderSettings(prefs, settings)

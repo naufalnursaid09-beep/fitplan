@@ -84,9 +84,5 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
 
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
-    implementation("androidx.exifinterface:exifinterface:1.3.7")
-    // SDK resmi Anthropic (Claude API)
-    implementation("com.anthropic:anthropic-java:3.3.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
 }

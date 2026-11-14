@@ -102,7 +102,7 @@ private fun FitPlanRoot() {
                     )
                 }
                 composable(Tab.Schedule.route) { ScheduleScreen() }
-                composable(Tab.Food.route) { FoodScreen(onOpenSettings = { go(Tab.Settings.route) }) }
+                composable(Tab.Food.route) { FoodScreen() }
                 composable(Tab.Progress.route) { ProgressScreen() }
                 composable(Tab.Settings.route) { SettingsScreen() }
                 composable(

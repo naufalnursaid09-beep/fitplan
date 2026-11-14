@@ -210,7 +210,7 @@ private fun FoodHistory(foods: List<FoodLog>, targetKcal: Int, targetProtein: In
                 list.forEach { f ->
                     HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
                     Text(f.name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
-                    Text("${f.portion} · ${f.kcal} kkal · P ${num(f.protein)} g · K ${num(f.carbs)} g · L ${num(f.fat)} g",
+                    Text("${f.portion} · ${f.kcal} kkal · ${num(f.protein)} g protein",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(bottom = 4.dp))
